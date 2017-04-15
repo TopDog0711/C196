@@ -1,4 +1,4 @@
-package com.horn.michael.c196;
+package com.horn.michael.c196.POJO;
 
 import java.util.Date;
 import java.util.Vector;
@@ -10,10 +10,39 @@ import java.util.Vector;
 
 
 public class Course {
+    private int courseId;
     private String title;
     private Date startDate;
     private Date endDate;
     private CourseStatus status;
+    private Vector<Note> notes;
+
+    public int getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
+    }
+
+    public Vector<Note> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(Vector<Note> notes) {
+        this.notes = notes;
+    }
+
+    public Vector<Assessment> getAssessments() {
+        return assessments;
+    }
+
+    public void setAssessments(Vector<Assessment> assessments) {
+        this.assessments = assessments;
+    }
+
+    private Vector<Assessment> assessments;
+
 
     public Course() {
     }

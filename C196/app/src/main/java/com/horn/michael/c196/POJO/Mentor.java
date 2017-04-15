@@ -1,4 +1,4 @@
-package com.horn.michael.c196;
+package com.horn.michael.c196.POJO;
 
 import java.util.Vector;
 
@@ -40,6 +40,15 @@ public class Mentor {
         this.emails = emails;
     }
 
+    public int getMentorId() {
+        return mentorId;
+    }
+
+    public void setMentorId(int mentorId) {
+        this.mentorId = mentorId;
+    }
+
+    private int mentorId;
     private String name;
     private Vector<String> phoneNumbers;
     private Vector<String> emails;

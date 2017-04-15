@@ -1,4 +1,4 @@
-package com.horn.michael.c196;
+package com.horn.michael.c196.POJO;
 
 /**
  * Created by Mike on 4/14/2017.
