@@ -1,6 +1,8 @@
 package com.horn.michael.c196.SQL;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
@@ -8,7 +10,11 @@ import android.support.annotation.NonNull;
 import com.horn.michael.c196.POJO.*;
 import com.horn.michael.c196.interfaces.iStorable;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -16,7 +22,7 @@ import java.lang.reflect.Type;
  */
 
 public  class DbHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 8;
     public static final String DATABASE_NAME = "WGUHelper.db";
 
     public DbHelper(Context context) {
@@ -26,13 +32,14 @@ public  class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL( new Term().createTable());
+
+       Term.INSTANCE.createTable(db);
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL( new Term().deleteTable());
+        Term.INSTANCE.deleteTable(db);
 
         onCreate(db);
     }
@@ -50,10 +57,42 @@ public  class DbHelper extends SQLiteOpenHelper {
     public void insertObject(iStorable o)
     {
         SQLiteDatabase db = getWritableDatabase();
-        long rowID = db.insert(o.getTableName(), null, o.getValues());
+        try{
+            long rowID = db.insert(o.getTableName(), null, getValues(o));
+        }catch(Exception ex)
+        {
+
+        }
+
     }
 
 
+
+    public static ContentValues getValues(final Object obj) throws Exception {
+        ContentValues values = new ContentValues();
+
+        Field[] fields = obj.getClass().getDeclaredFields();
+
+
+        for(Field f: fields)
+        {
+            if(f.getName().startsWith("$")) continue;
+            if(f.getName() == "serialVersionUID") continue;
+            f.setAccessible(true);
+
+            Class<?> fieldType = f.getType();
+            if(String.class.isAssignableFrom(fieldType)) values.put(f.getName(), (String) f.get(obj));
+            else if(Integer.class.isAssignableFrom(fieldType)) values.put(f.getName(), (Integer) f.get(obj));
+            else if(Date.class.isAssignableFrom(fieldType)) {
+                values.put(f.getName(), ((Date) f.get(obj)).toString());
+            }
+
+        }
+
+
+
+        return values;
+    }
 
 
     @NonNull
